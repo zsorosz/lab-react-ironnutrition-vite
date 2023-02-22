@@ -1,34 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import { Button, Divider, Row, Card, Col } from "antd";
+import foods from "./foods.json";
+import FoodBox from "./components/FoodBox";
+import AddFoodForm from "./components/AddFoodForm";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [foodState, setFoodState] = useState(foods);
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
+  const [calories, setCalories] = useState(0);
+  const [servings, setServings] = useState(0);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setFoodState((prevFoodState) => {
+      return [...prevFoodState, { name, image, calories, servings }];
+    });
+    setName("");
+    setImage("");
+    setCalories(0);
+    setServings(0);
+  };
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <AddFoodForm
+        name={name}
+        setName={setName}
+        image={image}
+        setImage={setImage}
+        calories={calories}
+        setCalories={setCalories}
+        servings={servings}
+        setServings={setServings}
+        foodState={foodState}
+        setFoodState={setFoodState}
+        handleSubmit={handleSubmit}
+      />
+
+      <Button> Hide Form / Add New Food </Button>
+
+      {/* Display Search component here */}
+
+      <Divider>Food List</Divider>
+
+      <Row style={{ width: "100%", justifyContent: "center" }}>
+        {foodState.map((food) => {
+          return <FoodBox food={food} />;
+        })}
+      </Row>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
